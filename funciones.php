@@ -28,7 +28,7 @@
 
 
     //FUNCION PARA OBTENER TODOS LOS REGISTROS
-    function obtener_nombre_imagen($id_usuario){
+    function obtener_todos_registros($id_usuario){
         include('conexion.php');
 
         $stmt = $conexion->prepare("SELECT * FROM usuarios");
