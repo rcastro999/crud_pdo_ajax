@@ -13,13 +13,13 @@
     }
 
     if (isset($_POST["order"])) {
-        $query .= 'ORDER BY' . $_POST["order"]['0']['column'] . ' ' . $_POST["order"][0]['dir'] . ' ';        
+        $query .= 'ORDER BY' . $_POST['order']['0']['column'] .' '.$_POST["order"][0]['dir'] . ' ';        
     }else{
         $query .= 'ORDER BY id DESC ';
     }
 
     if($_POST["length"] != -1){
-        $query .= 'LIMIT ' . $_POST["start"] . ',' . $_POST["length"];
+        $query .= 'LIMIT ' . $_POST["start"] . ','. $_POST["length"];
     }
 
     $stmt = $conexion->prepare($query);
@@ -54,6 +54,5 @@
         "recordsFiltered"    => obtener_todos_registros(),
         "data"               => $datos
     );
-    console.log($salida);
 
     echo json_encode($salida);
