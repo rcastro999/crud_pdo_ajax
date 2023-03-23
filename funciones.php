@@ -1,9 +1,8 @@
 <?php
 
-
-    //FUNCION PARA SUBIR IMAGEN
     function subir_imagen(){
-        if(isset($_FILES["imagen_usuario"])){
+        if (isset($_FILES["imagen_usuario"])) {
+            
             $extension = explode('.', $_FILES["imagen_usuario"]['name']);
             $nuevo_nombre = rand() . '.' . $extension[1];
             $ubicacion = './img/' . $nuevo_nombre;
@@ -12,11 +11,8 @@
         }
     }
 
-
-    //FUNCION PARA OBTENER NOMBRE DE IMAGEN
     function obtener_nombre_imagen($id_usuario){
         include('conexion.php');
-
         $stmt = $conexion->prepare("SELECT imagen FROM usuarios WHERE id = '$id_usuario'");
         $stmt->execute();
         $resultado = $stmt->fetchAll();
@@ -25,16 +21,10 @@
         }
     }
 
-
-
-    //FUNCION PARA OBTENER TODOS LOS REGISTROS
-    function obtener_todos_registros($id_usuario){
+    function obtener_todos_registros(){
         include('conexion.php');
-
         $stmt = $conexion->prepare("SELECT * FROM usuarios");
         $stmt->execute();
-        $resultado = $stmt->fetchAll();
-
-        return $stmt->rowCount();
+        $resultado = $stmt->fetchAll(); 
+        return $stmt->rowCount();       
     }
-
