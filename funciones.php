@@ -1,54 +1,30 @@
 <?php
 
-include("conexion.php");
-include("funciones.php");
-
-if ($_POST["operacion"] == "Crear") {
-    $imagen = '';
-    if ($_FILES["imagen_usuario"]["name"] != '') {
-        $imagen = subir_imagen();
-    }
-    $stmt = $conexion->prepare("INSERT INTO usuarios(nombre, apellidos, imagen, telefono, email)VALUES(:nombre, :apellidos, :imagen, :telefono, :email)");
-
-    $resultado = $stmt->execute(
-        array(
-            ':nombre'    => $_POST["nombre"],
-            ':apellidos'    => $_POST["apellidos"],
-            ':telefono'    => $_POST["telefono"],
-            ':email'    => $_POST["email"],
-            ':imagen'    => $imagen
-        )
-    );
-
-    if (!empty($resultado)) {
-        echo 'Registro creado';
-    }
-}
-
-
-if ($_POST["operacion"] == "Editar") {
-    $imagen = '';
-    if ($_FILES["imagen_usuario"]["name"] != '') {
-        $imagen = subir_imagen();
-    }else{
-        $imagen = $_POST["imagen_usuario_oculta"];
+    function subir_imagen(){
+        if (isset($_FILES["imagen_usuario"])) {
+            
+            $extension = explode('.', $_FILES["imagen_usuario"]['name']);
+            $nuevo_nombre = rand() . '.' . $extension[1];
+            $ubicacion = './img/' . $nuevo_nombre;
+            move_uploaded_file($_FILES["imagen_usuario"]['tmp_name'], $ubicacion);
+            return $nuevo_nombre;
+        }
     }
 
-
-    $stmt = $conexion->prepare("UPDATE usuarios SET nombre=:nombre, apellidos=:apellidos, imagen=:imagen, telefono=:telefono, email=:email WHERE id = :id");
-
-    $resultado = $stmt->execute(
-        array(
-            ':nombre'    => $_POST["nombre"],
-            ':apellidos'    => $_POST["apellidos"],
-            ':telefono'    => $_POST["telefono"],
-            ':email'    => $_POST["email"],
-            ':imagen'    => $imagen,
-            ':id'    => $_POST["id_usuario"]
-        )
-    );
-
-    if (!empty($resultado)) {
-        echo 'Registro actualizado';
+    function obtener_nombre_imagen($id_usuario){
+        include('conexion.php');
+        $stmt = $conexion->prepare("SELECT imagen FROM usuarios WHERE id = '$id_usuario'");
+        $stmt->execute();
+        $resultado = $stmt->fetchAll();
+        foreach($resultado as $fila){
+            return $fila["imagen"];
+        }
     }
-}
+
+    function obtener_todos_registros(){
+        include('conexion.php');
+        $stmt = $conexion->prepare("SELECT * FROM usuarios");
+        $stmt->execute();
+        $resultado = $stmt->fetchAll(); 
+        return $stmt->rowCount();       
+    }
